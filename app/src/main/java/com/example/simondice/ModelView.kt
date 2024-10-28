@@ -1,3 +1,4 @@
+// ModelView.kt
 package com.example.simondice
 
 import android.util.Log
@@ -20,6 +21,10 @@ class ModelView() : ViewModel() {
         val randomButtonIndex = (1..4).random()
         Datos.numero = randomButtonIndex
         Log.d(TAG_LOG, "Random: $randomButtonIndex")
+    }
+
+    fun compararNumeros(buttonValue: Int): Boolean {
+        return buttonValue == Datos.numero
     }
 
     fun getButtons(): List<Datos.ButtonData> {

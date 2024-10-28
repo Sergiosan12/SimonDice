@@ -1,3 +1,4 @@
+// IU.kt
 package com.example.simondice
 
 import android.util.Log
@@ -61,6 +62,8 @@ class UI {
                                 onClick = {
                                     Log.d("ColorPresionado", buttonData.colorButton.label)
                                     color = buttonData.colorButton.label
+                                    val isCorrect = viewModel.compararNumeros(buttonData.colorButton.value)
+                                    message = if (isCorrect) "Correcto!" else "Incorrecto!"
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = buttonData.colorButton.color

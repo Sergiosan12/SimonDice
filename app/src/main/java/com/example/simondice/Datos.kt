@@ -7,11 +7,11 @@ object Datos {
 
     var numero: Int = 0
 
-    enum class ColorButton(val color: Color, val label: String) {
-        VERDE(Color.Green, "Verde"),
-        ROJO(Color.Red, "Rojo"),
-        AMARILLO(Color.Yellow, "Amarillo"),
-        AZUL(Color.Blue, "Azul")
+    enum class ColorButton(val color: Color, val label: String, val value: Int) {
+        VERDE(Color.Green, "Verde", 1),
+        ROJO(Color.Red, "Rojo", 2),
+        AMARILLO(Color.Yellow, "Amarillo", 3),
+        AZUL(Color.Blue, "Azul", 4)
     }
 
     data class ButtonData(val colorButton: ColorButton, val shape: RoundedCornerShape)
