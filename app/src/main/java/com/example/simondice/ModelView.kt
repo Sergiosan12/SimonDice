@@ -17,11 +17,11 @@ class ModelView() : ViewModel() {
         buttons.value = getButtons()
     }
 
-    // Se crea un número aleatorio entre 1 y 4
+    // Se crea un número aleatorio entre 1 y 4 y lo asigna a la variable numero
     fun crearRandomBoton() {
         val randomButtonIndex = (1..4).random()
         Datos.numero = randomButtonIndex
-        Log.d(TAG_LOG, "Random: $randomButtonIndex")
+        Log.d(TAG_LOG, "Random: $randomButtonIndex") // Muestra en el Log el número aleatorio
     }
 
     // Se compara el número aleatorio con el número del botón presionado

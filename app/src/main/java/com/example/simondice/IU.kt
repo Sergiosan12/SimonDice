@@ -24,6 +24,8 @@ import androidx.compose.foundation.text.BasicTextField
 @Composable
 fun IU(viewModel: ModelView) {
 
+    val TAG_LOG = "miDebug"
+
     var color by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
     val buttons = viewModel.getButtons()
@@ -48,7 +50,7 @@ fun IU(viewModel: ModelView) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.background(Color.Black)
         ) {
-            buttons.chunked(2).forEach { rowButtons ->
+            buttons.chunked(2).forEach { rowButtons -> // Divide los botones en dos filas
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -57,7 +59,7 @@ fun IU(viewModel: ModelView) {
                     rowButtons.forEach { buttonData ->
                         Button(
                             onClick = {
-                                Log.d("ColorPresionado", buttonData.colorButton.label) // Muestra en el Log el color del botón presionado
+                                Log.d(TAG_LOG, buttonData.colorButton.label) // Muestra en el Log el color del botón presionado
                                 color = buttonData.colorButton.label // Asigna el color del botón presionado a la variable color
                                 val isCorrect = viewModel.compararNumeros(buttonData.colorButton.value) // Llama a la función compararNumeros del ViewModel para comparar el número aleatorio generado con el número del botón presionado
                                 message = if (isCorrect) "Correcto!" else "Incorrecto!" // Muestra un mensaje en la pantalla dependiendo si el número aleatorio es igual al número del botón presionado
