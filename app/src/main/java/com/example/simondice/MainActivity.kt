@@ -1,3 +1,4 @@
+// MainActivity.kt
 package com.example.simondice
 
 import android.os.Bundle
@@ -18,7 +19,7 @@ class MainActivity : ComponentActivity() {
                     color = Color.Black,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    UI().IU(ModelView())
+                    IU(ModelView())
                 }
             }
         }
