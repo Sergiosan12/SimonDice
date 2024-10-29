@@ -1,4 +1,3 @@
-// MainActivity.kt
 package com.example.simondice
 
 import android.os.Bundle
@@ -10,6 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import com.example.simondice.ui.theme.SimonDiceTheme
 
+
+// Clase principal de la aplicación, aquí se inicializa la aplicación y se le asigna el tema.
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

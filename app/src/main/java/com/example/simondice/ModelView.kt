@@ -1,4 +1,3 @@
-// ModelView.kt
 package com.example.simondice
 
 import android.util.Log
@@ -11,22 +10,26 @@ class ModelView() : ViewModel() {
 
     private val TAG_LOG = "miDebug"
 
+
     var buttons = mutableStateOf(listOf<Datos.ButtonData>())
 
     init {
         buttons.value = getButtons()
     }
 
+    // Se crea un número aleatorio entre 1 y 4
     fun crearRandomBoton() {
         val randomButtonIndex = (1..4).random()
         Datos.numero = randomButtonIndex
         Log.d(TAG_LOG, "Random: $randomButtonIndex")
     }
 
+    // Se compara el número aleatorio con el número del botón presionado
     fun compararNumeros(buttonValue: Int): Boolean {
         return buttonValue == Datos.numero
     }
 
+    // Se obtienen los datos de los botones
     fun getButtons(): List<Datos.ButtonData> {
         return listOf(
             Datos.ButtonData(Datos.ColorButton.VERDE, RoundedCornerShape(topStart = 180.dp)),

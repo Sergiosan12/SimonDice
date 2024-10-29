@@ -1,4 +1,3 @@
-// IU.kt
 package com.example.simondice
 
 import android.util.Log
@@ -34,7 +33,7 @@ fun IU(viewModel: ModelView) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.background(Color.Black)
     ) {
-
+        // Muestra el mensaje en la pantalla
         BasicTextField(
             value = message,
             onValueChange = { message = it },
@@ -58,10 +57,10 @@ fun IU(viewModel: ModelView) {
                     rowButtons.forEach { buttonData ->
                         Button(
                             onClick = {
-                                Log.d("ColorPresionado", buttonData.colorButton.label)
-                                color = buttonData.colorButton.label
-                                val isCorrect = viewModel.compararNumeros(buttonData.colorButton.value)
-                                message = if (isCorrect) "Correcto!" else "Incorrecto!"
+                                Log.d("ColorPresionado", buttonData.colorButton.label) // Muestra en el Log el color del botón presionado
+                                color = buttonData.colorButton.label // Asigna el color del botón presionado a la variable color
+                                val isCorrect = viewModel.compararNumeros(buttonData.colorButton.value) // Llama a la función compararNumeros del ViewModel para comparar el número aleatorio generado con el número del botón presionado
+                                message = if (isCorrect) "Correcto!" else "Incorrecto!" // Muestra un mensaje en la pantalla dependiendo si el número aleatorio es igual al número del botón presionado
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = buttonData.colorButton.color
@@ -79,8 +78,8 @@ fun IU(viewModel: ModelView) {
             // Botón Start
             Button(
                 onClick = {
-                    viewModel.crearRandomBoton()
-                    message = "Numero generado"
+                    viewModel.crearRandomBoton() // Llama a la función crearRandomBoton del ViewModel
+                    message = "Numero generado" // Muestra un mensaje en la pantalla
                 },
                 modifier = Modifier
                     .padding(5.dp)
