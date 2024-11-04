@@ -6,30 +6,64 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 
+/**
+ * Clase ModelView que se encarga de manejar la lógica de la aplicación.
+ */
 class ModelView() : ViewModel() {
 
     private val TAG_LOG = "miDebug"
 
-
+    //Lista de botones
     var buttons = mutableStateOf(listOf<Datos.ButtonData>())
+
+    //Variable que indica si el juego está activo
+    var gameActive = mutableStateOf(true)
+
+    //Variable que almacena el mensaje que se muestra en la pantalla
+    var mensajeC = mutableStateOf("")
 
     init {
         buttons.value = getButtons()
     }
 
-    // Se crea un número aleatorio entre 1 y 4 y lo asigna a la variable numero
+    /**
+     * Función que crea un número aleatorio y lo asigna a la variable numero.
+     */
     fun crearRandomBoton() {
         val randomButtonIndex = (1..4).random()
         Datos.numero = randomButtonIndex
-        Log.d(TAG_LOG, "Random: $randomButtonIndex") // Muestra en el Log el número aleatorio
+        mensajeC.value = Datos.ColorButton.values().first { it.value == randomButtonIndex }.label
+        Log.d(TAG_LOG, "Random: $randomButtonIndex")
     }
 
-    // Se compara el número aleatorio con el número del botón presionado
+    /**
+     * Función que compara el número del botón con el número generado aleatoriamente.
+     * @param buttonValue Número del botón seleccionado.
+     * @return Verdadero si el número del botón es igual al número generado aleatoriamente, falso en caso contrario.
+     */
     fun compararNumeros(buttonValue: Int): Boolean {
         return buttonValue == Datos.numero
     }
 
-    // Se obtienen los datos de los botones
+    /**
+     * Función que inicia el juego.
+     */
+    fun empezarJugar() {
+        gameActive.value = true
+        crearRandomBoton()
+    }
+
+    /**
+     * Función que finaliza el juego.
+     */
+    fun endGame() {
+        gameActive.value = false
+        mensajeC.value = "Perdiste"
+    }
+
+    /**
+     * Función que retorna una lista de botones.
+     */
     fun getButtons(): List<Datos.ButtonData> {
         return listOf(
             Datos.ButtonData(Datos.ColorButton.VERDE, RoundedCornerShape(topStart = 180.dp)),

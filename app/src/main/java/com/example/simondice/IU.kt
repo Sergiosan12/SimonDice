@@ -27,22 +27,23 @@ fun IU(viewModel: ModelView) {
     val TAG_LOG = "miDebug"
 
     var color by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
     val buttons = viewModel.getButtons()
+    val gameActive by viewModel.gameActive
+    val mensajeC by viewModel.mensajeC
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.background(Color.Black)
     ) {
-        // Muestra el mensaje en la pantalla
         BasicTextField(
-            value = message,
-            onValueChange = { message = it },
+            value = mensajeC,
+            onValueChange = { },
             modifier = Modifier
                 .padding(16.dp)
                 .background(Color.White)
-                .padding(8.dp)
+                .padding(8.dp),
+            readOnly = true
         )
 
         Column(
@@ -50,7 +51,7 @@ fun IU(viewModel: ModelView) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.background(Color.Black)
         ) {
-            buttons.chunked(2).forEach { rowButtons -> // Divide los botones en dos filas
+            buttons.chunked(2).forEach { rowButtons ->
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -59,10 +60,16 @@ fun IU(viewModel: ModelView) {
                     rowButtons.forEach { buttonData ->
                         Button(
                             onClick = {
-                                Log.d(TAG_LOG, buttonData.colorButton.label) // Muestra en el Log el color del botón presionado
-                                color = buttonData.colorButton.label // Asigna el color del botón presionado a la variable color
-                                val isCorrect = viewModel.compararNumeros(buttonData.colorButton.value) // Llama a la función compararNumeros del ViewModel para comparar el número aleatorio generado con el número del botón presionado
-                                message = if (isCorrect) "Correcto!" else "Incorrecto!" // Muestra un mensaje en la pantalla dependiendo si el número aleatorio es igual al número del botón presionado
+                                if (gameActive) { // Si el juego está activo
+                                    Log.d(TAG_LOG, buttonData.colorButton.label)
+                                    color = buttonData.colorButton.label
+                                    val isCorrect = viewModel.compararNumeros(buttonData.colorButton.value)
+                                    if (isCorrect) { // Si el botón seleccionado es correcto
+                                        viewModel.crearRandomBoton() // Se crea un nuevo número aleatorio
+                                    } else {
+                                        viewModel.endGame()  // Se finaliza el juego
+                                    }
+                                }
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = buttonData.colorButton.color
@@ -77,11 +84,9 @@ fun IU(viewModel: ModelView) {
                 }
             }
 
-            // Botón Start
             Button(
                 onClick = {
-                    viewModel.crearRandomBoton() // Llama a la función crearRandomBoton del ViewModel
-                    message = "Numero generado" // Muestra un mensaje en la pantalla
+                    viewModel.empezarJugar()
                 },
                 modifier = Modifier
                     .padding(5.dp)
