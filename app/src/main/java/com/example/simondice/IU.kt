@@ -24,11 +24,7 @@ import androidx.compose.runtime.livedata.observeAsState
 
 @Composable
 fun IU(viewModel: ModelView) {
-
     val TAG_LOG = "miDebug"
-
-    var color by remember { mutableStateOf("") }
-    val buttons = viewModel.getButtons()
     val estado by viewModel.estadoLiveData.observeAsState(Datos.Estados.INICIO)
     val mensajeC by viewModel.mensajeC
 
@@ -47,56 +43,67 @@ fun IU(viewModel: ModelView) {
             readOnly = true
         )
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.background(Color.Black)
-        ) {
-            buttons.chunked(2).forEach { rowButtons ->
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.background(Color.Black)
-                ) {
-                    rowButtons.forEach { buttonData ->
-                        Button(
-                            onClick = {
-                                if (estado == Datos.Estados.ADIVINANDO) {
-                                    Log.d(TAG_LOG, buttonData.colorButton.label)
-                                    color = buttonData.colorButton.label
-                                    val isCorrect = viewModel.compararNumeros(buttonData.colorButton.value)
-                                    if (isCorrect) {
-                                        viewModel.crearRandomBoton()
-                                    } else {
-                                        viewModel.endGame()
-                                    }
+        Botones(viewModel, estado, TAG_LOG)
+        Boton_Start(viewModel, estado)
+    }
+}
+
+@Composable
+fun Botones(viewModel: ModelView, estado: Datos.Estados, TAG_LOG: String) {
+    val buttons = viewModel.getButtons()
+    var color by remember { mutableStateOf("") }
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.background(Color.Black)
+    ) {
+        buttons.chunked(2).forEach { rowButtons ->
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.background(Color.Black)
+            ) {
+                rowButtons.forEach { buttonData ->
+                    Button(
+                        onClick = {
+                            if (estado == Datos.Estados.ADIVINANDO) {
+                                Log.d(TAG_LOG, buttonData.colorButton.label)
+                                color = buttonData.colorButton.label
+                                val isCorrect = viewModel.compararNumeros(buttonData.colorButton.value)
+                                if (isCorrect) {
+                                    viewModel.crearRandomBoton()
+                                } else {
+                                    viewModel.endGame()
                                 }
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if (estado == Datos.Estados.ADIVINANDO) buttonData.colorButton.color else Color.Gray
-                            ),
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .size(width = 180.dp, height = 180.dp),
-                            shape = buttonData.shape,
-                            enabled = estado == Datos.Estados.ADIVINANDO
-                        ) {
-                        }
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (estado == Datos.Estados.ADIVINANDO) buttonData.colorButton.color else Color.Gray
+                        ),
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .size(width = 180.dp, height = 180.dp),
+                        shape = buttonData.shape,
+                    ) {
                     }
                 }
             }
-
-            Button(
-                onClick = {
-                    viewModel.empezarJugar()
-                },
-                modifier = Modifier
-                    .padding(5.dp)
-                    .size(width = 180.dp, height = 50.dp),
-                enabled = estado == Datos.Estados.INICIO || estado == Datos.Estados.PERDIDO
-            ) {
-                Text("Start")
-            }
         }
+    }
+}
+
+@Composable
+fun Boton_Start(viewModel: ModelView, estado: Datos.Estados) {
+    Button(
+        onClick = {
+            viewModel.empezarJugar()
+        },
+        modifier = Modifier
+            .padding(5.dp)
+            .size(width = 180.dp, height = 50.dp),
+        enabled = estado == Datos.Estados.INICIO || estado == Datos.Estados.PERDIDO
+    ) {
+        Text("Start")
     }
 }

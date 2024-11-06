@@ -24,6 +24,10 @@ class ModelView() : ViewModel() {
     //Variable que almacena el mensaje que se muestra en la pantalla
     var mensajeC = mutableStateOf("")
 
+    /**
+     * Inicialización de la clase ModelView.
+     * Se inicializa el estado del juego y se obtienen los botones.
+     */
     init {
         Log.d(TAG_LOG,"Estado: ${estadoLiveData.value}")
         buttons.value = getButtons()
@@ -31,6 +35,8 @@ class ModelView() : ViewModel() {
 
     /**
      * Función que crea un número aleatorio y lo asigna a la variable numero.
+     * Cambia el estado a GENERANDO y muestra un mensaje en la pantalla.
+     * Una vez generado el número cambia el estado a ADIVINANDO.
      */
     fun crearRandomBoton() {
         estadoLiveData.value = Datos.Estados.GENERANDO
@@ -53,6 +59,7 @@ class ModelView() : ViewModel() {
 
     /**
      * Función que inicia el juego.
+     * Cambia el estado a GENERANDO y llama a la función crearRandomBoton.
      */
     fun empezarJugar() {
         estadoLiveData.value = Datos.Estados.GENERANDO
@@ -61,6 +68,7 @@ class ModelView() : ViewModel() {
 
     /**
      * Función que finaliza el juego.
+     * Cambia el estado a PERDIDO y muestra un mensaje en la pantalla.
      */
     fun endGame() {
         estadoLiveData.value = Datos.Estados.PERDIDO
