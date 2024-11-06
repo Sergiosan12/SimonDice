@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.runtime.livedata.observeAsState
 
 @Composable
 fun IU(viewModel: ModelView) {
@@ -28,7 +29,7 @@ fun IU(viewModel: ModelView) {
 
     var color by remember { mutableStateOf("") }
     val buttons = viewModel.getButtons()
-    val gameActive by viewModel.gameActive
+    val estado by viewModel.estadoLiveData.observeAsState(Datos.Estados.INICIO)
     val mensajeC by viewModel.mensajeC
 
     Column(
@@ -60,24 +61,25 @@ fun IU(viewModel: ModelView) {
                     rowButtons.forEach { buttonData ->
                         Button(
                             onClick = {
-                                if (gameActive) { // Si el juego está activo
+                                if (estado == Datos.Estados.ADIVINANDO) {
                                     Log.d(TAG_LOG, buttonData.colorButton.label)
                                     color = buttonData.colorButton.label
                                     val isCorrect = viewModel.compararNumeros(buttonData.colorButton.value)
-                                    if (isCorrect) { // Si el botón seleccionado es correcto
-                                        viewModel.crearRandomBoton() // Se crea un nuevo número aleatorio
+                                    if (isCorrect) {
+                                        viewModel.crearRandomBoton()
                                     } else {
-                                        viewModel.endGame()  // Se finaliza el juego
+                                        viewModel.endGame()
                                     }
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = buttonData.colorButton.color
+                                containerColor = if (estado == Datos.Estados.ADIVINANDO) buttonData.colorButton.color else Color.Gray
                             ),
                             modifier = Modifier
                                 .padding(5.dp)
                                 .size(width = 180.dp, height = 180.dp),
-                            shape = buttonData.shape
+                            shape = buttonData.shape,
+                            enabled = estado == Datos.Estados.ADIVINANDO
                         ) {
                         }
                     }
@@ -90,7 +92,8 @@ fun IU(viewModel: ModelView) {
                 },
                 modifier = Modifier
                     .padding(5.dp)
-                    .size(width = 180.dp, height = 50.dp)
+                    .size(width = 180.dp, height = 50.dp),
+                enabled = estado == Datos.Estados.INICIO || estado == Datos.Estados.PERDIDO
             ) {
                 Text("Start")
             }

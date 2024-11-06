@@ -18,4 +18,12 @@ object Datos {
 
     // Se crea una data class con los datos de los botones
     data class ButtonData(val colorButton: ColorButton, val shape: RoundedCornerShape)
+
+    enum class Estados (val value: Int, val label: String) {
+        INICIO(0, "Inicio"),
+        GENERANDO(1, "Generando"),
+        ADIVINANDO(2, "Adivinando"),
+        PERDIDO(3, "Perdido")
+
+    }
 }

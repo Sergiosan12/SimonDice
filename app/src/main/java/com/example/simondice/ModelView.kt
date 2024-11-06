@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+
 
 /**
  * Clase ModelView que se encarga de manejar la lógica de la aplicación.
@@ -13,16 +15,17 @@ class ModelView() : ViewModel() {
 
     private val TAG_LOG = "miDebug"
 
+    //Variable que almacena el estado del juego como observable.
+    val estadoLiveData : MutableLiveData<Datos.Estados> = MutableLiveData(Datos.Estados.INICIO)
+
     //Lista de botones
     var buttons = mutableStateOf(listOf<Datos.ButtonData>())
-
-    //Variable que indica si el juego está activo
-    var gameActive = mutableStateOf(true)
 
     //Variable que almacena el mensaje que se muestra en la pantalla
     var mensajeC = mutableStateOf("")
 
     init {
+        Log.d(TAG_LOG,"Estado: ${estadoLiveData.value}")
         buttons.value = getButtons()
     }
 
@@ -30,10 +33,13 @@ class ModelView() : ViewModel() {
      * Función que crea un número aleatorio y lo asigna a la variable numero.
      */
     fun crearRandomBoton() {
+        estadoLiveData.value = Datos.Estados.GENERANDO
         val randomButtonIndex = (1..4).random()
         Datos.numero = randomButtonIndex
         mensajeC.value = Datos.ColorButton.values().first { it.value == randomButtonIndex }.label
-        Log.d(TAG_LOG, "Random: $randomButtonIndex")
+        Log.d(TAG_LOG, "Estado: ${estadoLiveData.value} - creado random $randomButtonIndex ")
+        estadoLiveData.value=Datos.Estados.ADIVINANDO
+        Log.d(TAG_LOG,"Estado: ${estadoLiveData.value}")
     }
 
     /**
@@ -49,7 +55,7 @@ class ModelView() : ViewModel() {
      * Función que inicia el juego.
      */
     fun empezarJugar() {
-        gameActive.value = true
+        estadoLiveData.value = Datos.Estados.GENERANDO
         crearRandomBoton()
     }
 
@@ -57,8 +63,9 @@ class ModelView() : ViewModel() {
      * Función que finaliza el juego.
      */
     fun endGame() {
-        gameActive.value = false
+        estadoLiveData.value = Datos.Estados.PERDIDO
         mensajeC.value = "Perdiste"
+        Log.d(TAG_LOG,"Estado: ${estadoLiveData.value}")
     }
 
     /**
