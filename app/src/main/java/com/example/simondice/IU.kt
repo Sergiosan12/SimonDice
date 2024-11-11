@@ -19,29 +19,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.delay
 
 @Composable
 fun IU(viewModel: ModelView) {
     val TAG_LOG = "miDebug"
-    val estado by viewModel.estadoLiveData.observeAsState(Datos.Estados.INICIO)
-    val mensajeC by viewModel.mensajeC
+    val estado by viewModel.estadoLiveData.observeAsState(Estados.INICIO)
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.background(Color.Black)
     ) {
-        BasicTextField(
-            value = mensajeC,
-            onValueChange = { },
-            modifier = Modifier
-                .padding(16.dp)
-                .background(Color.White)
-                .padding(8.dp),
-            readOnly = true
-        )
+        if (estado == Estados.PERDIDO) {
+            Text(
+                text = "Perdiste",
+                color = Color.White,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
 
         Botones(viewModel, estado, TAG_LOG)
         Boton_Start(viewModel, estado)
@@ -49,9 +47,10 @@ fun IU(viewModel: ModelView) {
 }
 
 @Composable
-fun Botones(viewModel: ModelView, estado: Datos.Estados, TAG_LOG: String) {
+fun Botones(viewModel: ModelView, estado: Estados, TAG_LOG: String) {
     val buttons = viewModel.getButtons()
-    var color by remember { mutableStateOf("") }
+    val mensajeC by viewModel.mensajeC
+    var iluminado by remember { mutableStateOf<ColorButton?>(null) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -65,27 +64,34 @@ fun Botones(viewModel: ModelView, estado: Datos.Estados, TAG_LOG: String) {
                 modifier = Modifier.background(Color.Black)
             ) {
                 rowButtons.forEach { buttonData ->
+                    val isIlluminated = mensajeC == buttonData.colorButton.label || iluminado == buttonData.colorButton
                     Button(
                         onClick = {
-                            if (estado == Datos.Estados.ADIVINANDO) {
+                            if (estado == Estados.ADIVINANDO) {
                                 Log.d(TAG_LOG, buttonData.colorButton.label)
-                                color = buttonData.colorButton.label
-                                val isCorrect = viewModel.compararNumeros(buttonData.colorButton.value)
-                                if (isCorrect) {
-                                    viewModel.crearRandomBoton()
-                                } else {
+                                iluminado = buttonData.colorButton
+                                val isCorrect = viewModel.compararColorSeleccionado(buttonData.colorButton)
+                                if (!isCorrect) {
                                     viewModel.endGame()
                                 }
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (estado == Datos.Estados.ADIVINANDO) buttonData.colorButton.color else Color.Gray
+                            containerColor = if (isIlluminated) buttonData.colorButton.color.copy(alpha = 0.5f) else buttonData.colorButton.color
                         ),
                         modifier = Modifier
                             .padding(5.dp)
                             .size(width = 180.dp, height = 180.dp),
                         shape = buttonData.shape,
                     ) {
+                    }
+
+                    // Reset illumination after a short delay
+                    if (iluminado == buttonData.colorButton) {
+                        LaunchedEffect(iluminado) {
+                            delay(500)
+                            iluminado = null
+                        }
                     }
                 }
             }
@@ -94,7 +100,7 @@ fun Botones(viewModel: ModelView, estado: Datos.Estados, TAG_LOG: String) {
 }
 
 @Composable
-fun Boton_Start(viewModel: ModelView, estado: Datos.Estados) {
+fun Boton_Start(viewModel: ModelView, estado: Estados) {
     Button(
         onClick = {
             viewModel.empezarJugar()
@@ -102,7 +108,7 @@ fun Boton_Start(viewModel: ModelView, estado: Datos.Estados) {
         modifier = Modifier
             .padding(5.dp)
             .size(width = 180.dp, height = 50.dp),
-        enabled = estado == Datos.Estados.INICIO || estado == Datos.Estados.PERDIDO
+        enabled = estado == Estados.INICIO || estado == Estados.PERDIDO
     ) {
         Text("Start")
     }

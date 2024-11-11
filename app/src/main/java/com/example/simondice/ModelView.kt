@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 /**
@@ -16,14 +19,17 @@ class ModelView() : ViewModel() {
     private val TAG_LOG = "miDebug"
 
     //Variable que almacena el estado del juego como observable.
-    val estadoLiveData : MutableLiveData<Datos.Estados> = MutableLiveData(Datos.Estados.INICIO)
+    val estadoLiveData : MutableLiveData<Estados> = MutableLiveData(Estados.INICIO)
 
     //Lista de botones
-    var buttons = mutableStateOf(listOf<Datos.ButtonData>())
+    var buttons = mutableStateOf(listOf<ButtonData>())
 
     //Variable que almacena el mensaje que se muestra en la pantalla
     var mensajeC = mutableStateOf("")
 
+    private val secuenciaColores = mutableListOf<ColorButton>()
+
+    private var indiceActual = 0
     /**
      * Inicialización de la clase ModelView.
      * Se inicializa el estado del juego y se obtienen los botones.
@@ -39,12 +45,12 @@ class ModelView() : ViewModel() {
      * Una vez generado el número cambia el estado a ADIVINANDO.
      */
     fun crearRandomBoton() {
-        estadoLiveData.value = Datos.Estados.GENERANDO
+        estadoLiveData.value = Estados.GENERANDO
         val randomButtonIndex = (1..4).random()
         Datos.numero = randomButtonIndex
-        mensajeC.value = Datos.ColorButton.values().first { it.value == randomButtonIndex }.label
+        mensajeC.value = ColorButton.values().first { it.value == randomButtonIndex }.label
         Log.d(TAG_LOG, "Estado: ${estadoLiveData.value} - creado random $randomButtonIndex ")
-        estadoLiveData.value=Datos.Estados.ADIVINANDO
+        estadoLiveData.value=Estados.ADIVINANDO
         Log.d(TAG_LOG,"Estado: ${estadoLiveData.value}")
     }
 
@@ -62,29 +68,88 @@ class ModelView() : ViewModel() {
      * Cambia el estado a GENERANDO y llama a la función crearRandomBoton.
      */
     fun empezarJugar() {
-        estadoLiveData.value = Datos.Estados.GENERANDO
-        crearRandomBoton()
+        estadoLiveData.value = Estados.GENERANDO
+        secuenciaColores.clear()
+        agregarColorASecuencia()
     }
 
+    private fun agregarColorASecuencia() {
+        val randomButtonIndex = (1..4).random()
+        val nuevoColor = ColorButton.values().first { it.value == randomButtonIndex }
+        secuenciaColores.add(nuevoColor)
+        mostrarSecuencia()
+    }
+
+    private fun mostrarSecuencia() {
+        viewModelScope.launch {
+            for (color in secuenciaColores) {
+                mensajeC.value = color.label
+                delay(500)
+                mensajeC.value = ""
+                delay(500)
+            }
+            delay(500)
+            estadoLiveData.value = Estados.ADIVINANDO
+            indiceActual = 0
+        }
+    }
+
+    fun compararColorSeleccionado(colorSeleccionado: ColorButton): Boolean {
+        if (colorSeleccionado == secuenciaColores[indiceActual]) {
+            indiceActual++
+            if (indiceActual == secuenciaColores.size) {
+                estadoLiveData.value = Estados.GENERANDO
+                viewModelScope.launch {
+                    delay(500)
+                    agregarColorASecuencia()
+                }
+            }
+            return true
+        } else {
+            endGame()
+            return false
+        }
+    }
     /**
      * Función que finaliza el juego.
      * Cambia el estado a PERDIDO y muestra un mensaje en la pantalla.
      */
     fun endGame() {
-        estadoLiveData.value = Datos.Estados.PERDIDO
+        estadoLiveData.value = Estados.PERDIDO
         mensajeC.value = "Perdiste"
-        Log.d(TAG_LOG,"Estado: ${estadoLiveData.value}")
+        Log.d(TAG_LOG, "Estado: ${estadoLiveData.value}")
     }
 
     /**
      * Función que retorna una lista de botones.
      */
-    fun getButtons(): List<Datos.ButtonData> {
+    fun getButtons(): List<ButtonData> {
         return listOf(
-            Datos.ButtonData(Datos.ColorButton.VERDE, RoundedCornerShape(topStart = 180.dp)),
-            Datos.ButtonData(Datos.ColorButton.ROJO, RoundedCornerShape(topEnd = 180.dp)),
-            Datos.ButtonData(Datos.ColorButton.AMARILLO, RoundedCornerShape(bottomStart = 180.dp)),
-            Datos.ButtonData(Datos.ColorButton.AZUL, RoundedCornerShape(bottomEnd = 180.dp))
+            ButtonData(ColorButton.VERDE, RoundedCornerShape(topStart = 180.dp)),
+            ButtonData(ColorButton.ROJO, RoundedCornerShape(topEnd = 180.dp)),
+            ButtonData(ColorButton.AMARILLO, RoundedCornerShape(bottomStart = 180.dp)),
+            ButtonData(ColorButton.AZUL, RoundedCornerShape(bottomEnd = 180.dp))
         )
     }
+
+    /**
+     * Corutina que lanza estados auxiliares.
+     */
+    fun estadosAuxiliares() {
+        viewModelScope.launch {
+            // guardamos el estado auxiliar
+            var estadoAux = EstadosAuxiliares.AUX1
+
+            // hacemos un cambio a tres estados auxiliares
+            Log.d(TAG_LOG, "estado (corutina): ${estadoAux}")
+            delay(1500)
+            estadoAux = EstadosAuxiliares.AUX2
+            Log.d(TAG_LOG, "estado (corutina): ${estadoAux}")
+            delay(1500)
+            estadoAux = EstadosAuxiliares.AUX3
+            Log.d(TAG_LOG, "estado (corutina): ${estadoAux}")
+            delay(1500)
+        }
+    }
+
 }
