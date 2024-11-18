@@ -76,10 +76,12 @@ class ModelView() : ViewModel() {
     /**
      * Función que agrega un color a la secuencia de colores.
      */
-    private fun agregarColorASecuencia() {
+    // In `ModelView.kt`
+    fun agregarColorASecuencia() {
         val randomButtonIndex = (1..4).random()
         val nuevoColor = ColorButton.values().first { it.value == randomButtonIndex }
         secuenciaColores.add(nuevoColor)
+        Datos.ronda.value = Datos.ronda.value?.plus(1) // Incrementa la ronda
         mostrarSecuencia()
     }
 
@@ -126,6 +128,7 @@ class ModelView() : ViewModel() {
     fun endGame() {
         estadoLiveData.value = Estados.PERDIDO
         mensajeC.value = "Perdiste"
+        Datos.ronda.value = 0
         Log.d(TAG_LOG, "Estado: ${estadoLiveData.value}")
     }
 
@@ -141,24 +144,5 @@ class ModelView() : ViewModel() {
         )
     }
 
-    /**
-     * Corutina que lanza estados auxiliares.
-     */
-    fun estadosAuxiliares() {
-        viewModelScope.launch {
-            // guardamos el estado auxiliar
-            var estadoAux = EstadosAuxiliares.AUX1
-
-            // hacemos un cambio a tres estados auxiliares
-            Log.d(TAG_LOG, "estado (corutina): ${estadoAux}")
-            delay(1500)
-            estadoAux = EstadosAuxiliares.AUX2
-            Log.d(TAG_LOG, "estado (corutina): ${estadoAux}")
-            delay(1500)
-            estadoAux = EstadosAuxiliares.AUX3
-            Log.d(TAG_LOG, "estado (corutina): ${estadoAux}")
-            delay(1500)
-        }
-    }
 
 }

@@ -27,6 +27,7 @@ import kotlinx.coroutines.delay
 fun IU(viewModel: ModelView) {
     val TAG_LOG = "miDebug"
     val estado by viewModel.estadoLiveData.observeAsState(Estados.INICIO)
+    val ronda by Datos.ronda.observeAsState(0) // Observa el LiveData de ronda
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -40,6 +41,12 @@ fun IU(viewModel: ModelView) {
                 modifier = Modifier.padding(16.dp)
             )
         }
+
+        Text(
+            text = "Ronda: $ronda",
+            color = Color.White,
+            modifier = Modifier.padding(16.dp)
+        )
 
         Botones(viewModel, estado, TAG_LOG)
         Boton_Start(viewModel, estado)

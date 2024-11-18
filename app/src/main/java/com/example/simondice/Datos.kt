@@ -2,10 +2,12 @@ package com.example.simondice
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.MutableLiveData
 
 object Datos {
     // Se inicializa la variable numero en 0
     var numero: Int = 0
+    var ronda : MutableLiveData <Int> = MutableLiveData(0)
 }
 
     // Se crea un enum class con los colores de los botones y sus valores asociados
@@ -28,9 +30,3 @@ object Datos {
 
     }
 
-    // Se crea un enum class con los estados auxiliares del juego y sus valores asociados
-    enum class EstadosAuxiliares(val txt: String) {
-        AUX1(txt = "aux1"),
-        AUX2(txt = "aux2"),
-        AUX3(txt = "aux3"),
-    }
