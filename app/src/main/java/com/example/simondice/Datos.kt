@@ -19,6 +19,7 @@ object Datos {
     // Se crea una data class con los datos de los botones
     data class ButtonData(val colorButton: ColorButton, val shape: RoundedCornerShape)
 
+    // Se crea un enum class con los estados del juego y sus valores asociados
     enum class Estados (val value: Int, val label: String) {
         INICIO(0, "Inicio"),
         GENERANDO(1, "Generando"),
@@ -27,6 +28,7 @@ object Datos {
 
     }
 
+    // Se crea un enum class con los estados auxiliares del juego y sus valores asociados
     enum class EstadosAuxiliares(val txt: String) {
         AUX1(txt = "aux1"),
         AUX2(txt = "aux2"),

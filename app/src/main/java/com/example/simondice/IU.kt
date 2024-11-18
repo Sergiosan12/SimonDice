@@ -86,7 +86,6 @@ fun Botones(viewModel: ModelView, estado: Estados, TAG_LOG: String) {
                     ) {
                     }
 
-                    // Reset illumination after a short delay
                     if (iluminado == buttonData.colorButton) {
                         LaunchedEffect(iluminado) {
                             delay(500)

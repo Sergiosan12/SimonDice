@@ -73,6 +73,9 @@ class ModelView() : ViewModel() {
         agregarColorASecuencia()
     }
 
+    /**
+     * Función que agrega un color a la secuencia de colores.
+     */
     private fun agregarColorASecuencia() {
         val randomButtonIndex = (1..4).random()
         val nuevoColor = ColorButton.values().first { it.value == randomButtonIndex }
@@ -80,6 +83,9 @@ class ModelView() : ViewModel() {
         mostrarSecuencia()
     }
 
+    /**
+     * Función que muestra la secuencia de colores.
+     */
     private fun mostrarSecuencia() {
         viewModelScope.launch {
             for (color in secuenciaColores) {
@@ -94,6 +100,9 @@ class ModelView() : ViewModel() {
         }
     }
 
+    /**
+     * Función que compara el color seleccionado con el color de la secuencia.
+     */
     fun compararColorSeleccionado(colorSeleccionado: ColorButton): Boolean {
         if (colorSeleccionado == secuenciaColores[indiceActual]) {
             indiceActual++
