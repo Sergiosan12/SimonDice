@@ -40,15 +40,6 @@ class ModelView() : ViewModel() {
     }
 
     /**
-     * Función que compara el número del botón con el número generado aleatoriamente.
-     * @param buttonValue Número del botón seleccionado.
-     * @return Verdadero si el número del botón es igual al número generado aleatoriamente, falso en caso contrario.
-     */
-    fun compararNumeros(buttonValue: Int): Boolean {
-        return buttonValue == Datos.numero
-    }
-
-    /**
      * Función que inicia el juego.
      * Cambia el estado a GENERANDO y llama a la función crearRandomBoton.
      */
