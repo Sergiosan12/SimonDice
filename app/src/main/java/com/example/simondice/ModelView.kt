@@ -40,21 +40,6 @@ class ModelView() : ViewModel() {
     }
 
     /**
-     * Función que crea un número aleatorio y lo asigna a la variable numero.
-     * Cambia el estado a GENERANDO y muestra un mensaje en la pantalla.
-     * Una vez generado el número cambia el estado a ADIVINANDO.
-     */
-    fun crearRandomBoton() {
-        estadoLiveData.value = Estados.GENERANDO
-        val randomButtonIndex = (1..4).random()
-        Datos.numero = randomButtonIndex
-        mensajeC.value = ColorButton.values().first { it.value == randomButtonIndex }.label
-        Log.d(TAG_LOG, "Estado: ${estadoLiveData.value} - creado random $randomButtonIndex ")
-        estadoLiveData.value=Estados.ADIVINANDO
-        Log.d(TAG_LOG,"Estado: ${estadoLiveData.value}")
-    }
-
-    /**
      * Función que compara el número del botón con el número generado aleatoriamente.
      * @param buttonValue Número del botón seleccionado.
      * @return Verdadero si el número del botón es igual al número generado aleatoriamente, falso en caso contrario.
@@ -111,7 +96,7 @@ class ModelView() : ViewModel() {
             if (indiceActual == secuenciaColores.size) {
                 estadoLiveData.value = Estados.GENERANDO
                 viewModelScope.launch {
-                    delay(500)
+                    delay(1500)
                     agregarColorASecuencia()
                 }
             }
