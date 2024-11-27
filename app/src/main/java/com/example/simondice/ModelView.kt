@@ -32,6 +32,7 @@ class ModelView() : ViewModel() {
 
     //Variable que almacena el índice actual de la secuencia de colores
     private var indiceActual = 0
+
     /**
      * Inicialización de la clase ModelView.
      * Se inicializa el estado del juego y se obtienen los botones.
@@ -43,7 +44,6 @@ class ModelView() : ViewModel() {
 
     /**
      * Función que inicia el juego.
-     * Cambia el estado a GENERANDO y llama a la función crearRandomBoton.
      */
     fun empezarJugar() {
         estadoLiveData.value = Estados.GENERANDO
@@ -52,9 +52,10 @@ class ModelView() : ViewModel() {
     }
 
     /**
-     * Función que agrega un color a la secuencia de colores.
+     * Función que agrega un color a la secuencia de colores para que el usuario adivine.
+     * Incrementa la ronda.
+     * Muestra la secuencia de colores.
      */
-    // In `ModelView.kt`
     fun agregarColorASecuencia() {
         val randomButtonIndex = (1..4).random()
         val nuevoColor = ColorButton.values().first { it.value == randomButtonIndex }
@@ -65,6 +66,8 @@ class ModelView() : ViewModel() {
 
     /**
      * Función que muestra la secuencia de colores.
+     * Muestra un color por un tiempo determinado.
+     * Cambia el estado a ADIVINANDO.
      */
     private fun mostrarSecuencia() {
         viewModelScope.launch {
@@ -82,6 +85,8 @@ class ModelView() : ViewModel() {
 
     /**
      * Función que compara el color seleccionado con el color de la secuencia.
+     * Si el color seleccionado es correcto, se incrementa el índice actual.
+     * Si el índice actual es igual al tamaño de la secuencia, se cambia el estado a GENERANDO.
      */
     fun compararColorSeleccionado(colorSeleccionado: ColorButton): Boolean {
         if (colorSeleccionado == secuenciaColores[indiceActual]) {
