@@ -104,7 +104,7 @@ Al ejecutar la aplicación, el usuario puede interactuar con el juego de **Simó
 
 Imagen de la aplicación iniciada:
 
-![Inicio de la aplicación](img(Simondice.png)
+![Inicio de la aplicación](img/Simondice.png)
 
 ### Corrutinas en Kotlin
 
