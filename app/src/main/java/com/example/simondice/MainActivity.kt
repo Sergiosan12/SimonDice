@@ -10,7 +10,9 @@ import androidx.compose.ui.Modifier
 import com.example.simondice.ui.theme.SimonDiceTheme
 
 
-// Clase principal de la aplicación, aquí se inicializa la aplicación y se le asigna el tema.
+/**
+ * Clase MainActivity que se encarga de mostrar la interfaz de usuario.
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -23,6 +23,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.LaunchedEffect
 import kotlinx.coroutines.delay
 
+/**
+ * Función que se encarga de mostrar la interfaz de usuario.
+ */
 @Composable
 fun IU(viewModel: ModelView) {
     val TAG_LOG = "miDebug"
@@ -53,6 +56,9 @@ fun IU(viewModel: ModelView) {
     }
 }
 
+/**
+ * Función que se encarga de mostrar los botones de colores de la aplicación.
+ */
 @Composable
 fun Botones(viewModel: ModelView, estado: Estados, TAG_LOG: String) {
     val buttons = viewModel.getButtons()
@@ -105,6 +111,9 @@ fun Botones(viewModel: ModelView, estado: Estados, TAG_LOG: String) {
     }
 }
 
+/**
+ * Función que se encarga de mostrar el botón de inicio de la aplicación.
+ */
 @Composable
 fun Boton_Start(viewModel: ModelView, estado: Estados) {
     Button(

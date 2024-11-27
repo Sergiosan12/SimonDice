@@ -27,8 +27,10 @@ class ModelView() : ViewModel() {
     //Variable que almacena el mensaje que se muestra en la pantalla
     var mensajeC = mutableStateOf("")
 
+    //Lista de colores con mutableList para agregar y eliminar elementos
     private val secuenciaColores = mutableListOf<ColorButton>()
 
+    //Variable que almacena el índice actual de la secuencia de colores
     private var indiceActual = 0
     /**
      * Inicialización de la clase ModelView.
